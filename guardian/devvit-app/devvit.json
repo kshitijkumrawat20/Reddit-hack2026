@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developers.reddit.com/schema/config-file.v1.json",
+  "name": "guardian-app",
+  "blocks": {
+    "entry": "src/main.tsx"
+  },
+  "http": {
+    "domains": [
+      "localhost:8000"
+    ]
+  },
+  "permissions": {
+    "reddit": true,
+    "http": true
+  }
+}

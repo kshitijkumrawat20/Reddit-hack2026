@@ -1,0 +1,24 @@
+# Node.js dependencies
+node_modules/
+dist/
+.tscache/
+.devvit/
+*.tsbuildinfo
+
+# Python virtual environment and dependencies
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+
+# Databases & local configs
+*.db
+.env
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
