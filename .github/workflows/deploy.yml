@@ -1,0 +1,40 @@
+name: Deploy to Hugging Face Spaces
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'guardian/backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Push to Hugging Face Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Configure Git
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          
+          # Clone HF Space repository
+          git clone https://Kshitijk20:$HF_TOKEN@huggingface.co/spaces/Kshitijk20/reddit_hack hf_space
+          
+          # Clear hf_space but preserve Git configurations and files
+          find hf_space -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -rf {} +
+          
+          # Copy all files from the guardian/backend folder to the root of HF Space
+          cp -r guardian/backend/* hf_space/
+          
+          # Navigate to HF Space and push changes
+          cd hf_space
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Deploy backend from GitHub Actions"
+          git push origin main
