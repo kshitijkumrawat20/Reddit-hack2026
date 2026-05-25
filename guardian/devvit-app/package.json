@@ -9,7 +9,8 @@
     "publish": "devvit publish"
   },
   "dependencies": {
-    "@devvit/public-api": "0.12.24"
+    "@devvit/public-api": "0.12.24",
+    "@devvit/redis": "^0.12.24"
   },
   "devDependencies": {
     "devvit": "0.12.24",

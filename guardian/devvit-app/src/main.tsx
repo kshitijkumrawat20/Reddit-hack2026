@@ -23,6 +23,7 @@ async function getEffectiveBaseUrl(context: any): Promise<string> {
 Devvit.configure({
   redditAPI: true,
   http: true,
+  redis: true,
 });
 
 // --- SETTINGS ---
@@ -57,7 +58,7 @@ Devvit.addTrigger({
         title: post.title,
         content: post.selftext || '',
         author: event.author?.name || 'unknown',
-      });
+      }, context.redis);
     } catch (error) {
       console.error(`[Guardian] Error checking post ${post.id}:`, error);
     }
@@ -88,7 +89,7 @@ Devvit.addTrigger({
         content: comment.body || '',
         author: event.author?.name || 'unknown',
         parent_id: comment.postId, // Map comment to its parent post ID
-      });
+      }, context.redis);
     } catch (error) {
       console.error(`[Guardian] Error checking comment ${comment.id}:`, error);
     }
@@ -160,7 +161,7 @@ Devvit.addCustomPostType({
     const { data: queueData, loading: loadingQueue } = useAsync(async () => {
       try {
         const baseUrl = await getEffectiveBaseUrl(context);
-        return await getQueue(baseUrl, context.subredditName!);
+        return await getQueue(baseUrl, context.subredditName!, context.redis);
       } catch (error) {
         console.error('[Guardian] Error fetching queue:', error);
         return [];
@@ -171,7 +172,7 @@ Devvit.addCustomPostType({
     const { data: analyticsData, loading: loadingAnalytics } = useAsync(async () => {
       try {
         const baseUrl = await getEffectiveBaseUrl(context);
-        return await getAnalytics(baseUrl, context.subredditName!);
+        return await getAnalytics(baseUrl, context.subredditName!, context.redis);
       } catch (error) {
         console.error('[Guardian] Error fetching analytics:', error);
         return null;
@@ -206,7 +207,7 @@ Devvit.addCustomPostType({
         const baseUrl = await getEffectiveBaseUrl(context);
 
         // Sync resolution to FastAPI backend
-        const success = await resolveItem(baseUrl, itemId, action, modUsername || 'moderator');
+        const success = await resolveItem(baseUrl, itemId, action, modUsername || 'moderator', context.subredditName!, context.redis);
         if (success) {
           context.ui.showToast(`Item resolved: ${action}d`);
           // Re-fetch dashboard states
@@ -224,7 +225,7 @@ Devvit.addCustomPostType({
     const handleFeedback = async (itemId: string, isCorrect: boolean) => {
       try {
         const baseUrl = await getEffectiveBaseUrl(context);
-        const success = await submitFeedback(baseUrl, itemId, isCorrect);
+        const success = await submitFeedback(baseUrl, itemId, isCorrect, undefined, context.subredditName!, context.redis);
         if (success) {
           context.ui.showToast(isCorrect ? 'Thanks for confirming!' : 'Reported false positive.');
           triggerRefresh();

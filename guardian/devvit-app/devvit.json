@@ -6,6 +6,7 @@
   },
   "permissions": {
     "reddit": true,
+    "redis": true,
     "http": {
       "domains": [
         "guardian-copilot.localthroat.link",
