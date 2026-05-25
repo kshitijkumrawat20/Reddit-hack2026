@@ -3,10 +3,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from guardian.backend.config import settings
-from guardian.backend.db import init_db
-from guardian.backend.api.moderation import router as moderation_router
-from guardian.backend.api.analytics import router as analytics_router
+from config import settings
+from db import init_db
+from api.moderation import router as moderation_router
+from api.analytics import router as analytics_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

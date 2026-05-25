@@ -5,15 +5,15 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import select, desc
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from guardian.backend.db import get_session
-from guardian.backend.models import (
+from db import get_session
+from models import (
     ContentSubmission,
     ResolutionRequest,
     FeedbackRequest,
     ModerationLog,
     QueueResponse
 )
-from guardian.backend.moderation.detector import ModerationDetector
+from moderation.detector import ModerationDetector
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/moderation", tags=["moderation"])

@@ -2,7 +2,7 @@ import json
 import logging
 from typing import List, Optional
 from pydantic import BaseModel, Field
-from guardian.backend.config import settings
+from config import settings
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

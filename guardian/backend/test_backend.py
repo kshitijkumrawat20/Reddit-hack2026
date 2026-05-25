@@ -9,11 +9,11 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 import os
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"  # Use in-memory SQLite for testing
 
-from guardian.backend.db import init_db, async_session_maker, engine
-from guardian.backend.models import ContentSubmission, ModerationLog, ResolutionRequest, FeedbackRequest
-from guardian.backend.moderation.detector import ModerationDetector
-from guardian.backend.services.gemini_service import GeminiService
-from guardian.backend.api.moderation import check_submission, get_moderation_queue, resolve_item, submit_feedback
+from db import init_db, async_session_maker, engine
+from models import ContentSubmission, ModerationLog, ResolutionRequest, FeedbackRequest
+from moderation.detector import ModerationDetector
+from services.gemini_service import GeminiService
+from api.moderation import check_submission, get_moderation_queue, resolve_item, submit_feedback
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("test_backend")

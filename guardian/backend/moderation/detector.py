@@ -6,9 +6,9 @@ from typing import List, Optional, Tuple
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from guardian.backend.config import settings
-from guardian.backend.models import ModerationLog, ContentSubmission
-from guardian.backend.services.gemini_service import GeminiService
+from config import settings
+from models import ModerationLog, ContentSubmission
+from services.gemini_service import GeminiService
 
 logger = logging.getLogger(__name__)
 

@@ -3,8 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import select, func
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from guardian.backend.db import get_session
-from guardian.backend.models import ModerationLog, SubredditAnalytics
+from db import get_session
+from models import ModerationLog, SubredditAnalytics
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/analytics", tags=["analytics"])

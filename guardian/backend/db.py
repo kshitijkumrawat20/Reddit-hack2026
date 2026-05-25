@@ -2,7 +2,7 @@ from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
-from guardian.backend.config import settings
+from config import settings
 
 # Create async database engine
 # Note: For SQLite, we disable same_thread check as we're in an async context
@@ -27,7 +27,7 @@ async_session_maker = sessionmaker(
 async def init_db():
     async with engine.begin() as conn:
         # Import models here to make sure they register with SQLModel.metadata
-        from guardian.backend.models import ModerationLog
+        from models import ModerationLog
         await conn.run_sync(SQLModel.metadata.create_all)
 
 async def get_session():
