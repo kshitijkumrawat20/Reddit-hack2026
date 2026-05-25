@@ -9,7 +9,7 @@ import {
   type SubredditAnalytics
 } from './api/backend.js';
 
-const DEFAULT_BACKEND_URL = 'https://guardian-copilot-dev.loca.lt';
+const DEFAULT_BACKEND_URL = 'https://kshitijk20-reddit-hack.hf.space';
 
 // Configure Devvit plugins
 Devvit.configure({
