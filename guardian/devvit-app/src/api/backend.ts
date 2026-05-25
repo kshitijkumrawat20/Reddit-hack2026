@@ -59,6 +59,7 @@ export async function checkContent(baseUrl: string, data: ContentSubmission): Pr
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Bypass-Tunnel-Reminder': 'true',
       },
       body: JSON.stringify(data),
     });
@@ -80,6 +81,9 @@ export async function getQueue(baseUrl: string, subreddit: string): Promise<Flag
     const url = `${cleanUrl(baseUrl)}/api/moderation/queue?subreddit=${subreddit}`;
     const response = await fetch(url, {
       method: 'GET',
+      headers: {
+        'Bypass-Tunnel-Reminder': 'true',
+      },
     });
 
     if (!response.ok) {
@@ -106,6 +110,7 @@ export async function resolveItem(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Bypass-Tunnel-Reminder': 'true',
       },
       body: JSON.stringify({ id, action, moderator }),
     });
@@ -129,6 +134,7 @@ export async function submitFeedback(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Bypass-Tunnel-Reminder': 'true',
       },
       body: JSON.stringify({ id, is_correct: isCorrect, reason }),
     });
@@ -145,6 +151,9 @@ export async function getAnalytics(baseUrl: string, subreddit: string): Promise<
     const url = `${cleanUrl(baseUrl)}/api/analytics/subreddit?subreddit=${subreddit}`;
     const response = await fetch(url, {
       method: 'GET',
+      headers: {
+        'Bypass-Tunnel-Reminder': 'true',
+      },
     });
 
     if (!response.ok) {
