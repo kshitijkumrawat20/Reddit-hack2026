@@ -4,13 +4,12 @@
   "blocks": {
     "entry": "src/main.tsx"
   },
-  "http": {
-    "domains": [
-      "localhost:8000"
-    ]
-  },
   "permissions": {
     "reddit": true,
-    "http": true
+    "http": {
+      "domains": [
+        "localhost:8000"
+      ]
+    }
   }
 }
