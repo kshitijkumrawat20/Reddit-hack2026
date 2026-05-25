@@ -11,6 +11,14 @@ import {
 
 const DEFAULT_BACKEND_URL = 'https://kshitijk20-reddit-hack.hf.space';
 
+async function getEffectiveBaseUrl(context: any): Promise<string> {
+  const url = await context.settings.get<string>('backend-url');
+  if (!url || url.includes('loca.lt') || url.includes('localtunnel') || url.includes('localthroat')) {
+    return DEFAULT_BACKEND_URL;
+  }
+  return url;
+}
+
 // Configure Devvit plugins
 Devvit.configure({
   redditAPI: true,
@@ -41,7 +49,7 @@ Devvit.addTrigger({
 
     console.log(`[Guardian] Processing new post submit: ${post.id}`);
     try {
-      const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+      const baseUrl = await getEffectiveBaseUrl(context);
       await checkContent(baseUrl, {
         id: post.id,
         type: 'post',
@@ -72,7 +80,7 @@ Devvit.addTrigger({
 
     console.log(`[Guardian] Processing new comment submit: ${comment.id}`);
     try {
-      const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+      const baseUrl = await getEffectiveBaseUrl(context);
       await checkContent(baseUrl, {
         id: comment.id,
         type: 'comment',
@@ -151,7 +159,7 @@ Devvit.addCustomPostType({
     // 3. Fetch flagged items queue
     const { data: queueData, loading: loadingQueue } = useAsync(async () => {
       try {
-        const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+        const baseUrl = await getEffectiveBaseUrl(context);
         return await getQueue(baseUrl, context.subredditName!);
       } catch (error) {
         console.error('[Guardian] Error fetching queue:', error);
@@ -162,7 +170,7 @@ Devvit.addCustomPostType({
     // 4. Fetch insights analytics
     const { data: analyticsData, loading: loadingAnalytics } = useAsync(async () => {
       try {
-        const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+        const baseUrl = await getEffectiveBaseUrl(context);
         return await getAnalytics(baseUrl, context.subredditName!);
       } catch (error) {
         console.error('[Guardian] Error fetching analytics:', error);
@@ -195,7 +203,7 @@ Devvit.addCustomPostType({
         }
         
         // Get dynamic backend URL
-        const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+        const baseUrl = await getEffectiveBaseUrl(context);
 
         // Sync resolution to FastAPI backend
         const success = await resolveItem(baseUrl, itemId, action, modUsername || 'moderator');
@@ -215,7 +223,7 @@ Devvit.addCustomPostType({
 
     const handleFeedback = async (itemId: string, isCorrect: boolean) => {
       try {
-        const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+        const baseUrl = await getEffectiveBaseUrl(context);
         const success = await submitFeedback(baseUrl, itemId, isCorrect);
         if (success) {
           context.ui.showToast(isCorrect ? 'Thanks for confirming!' : 'Reported false positive.');

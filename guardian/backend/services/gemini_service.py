@@ -44,9 +44,9 @@ class GeminiService:
             
             prompt = f"Analyze the following Reddit comment/post for toxic behavior, including harassment, hate speech, abusive language, or threats:\n\n{text}"
             
-            # Run model call (using gemini-1.5-flash as default)
+            # Run model call (using gemini-2.0-flash as default)
             response = client.models.generate_content(
-                model='gemini-1.5-flash',
+                model='gemini-2.0-flash',
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
@@ -75,7 +75,7 @@ class GeminiService:
             prompt = f"Analyze the following conversation thread. Determine if it shows signs of a rapidly escalating flame war or hostile back-and-forth personal arguments:\n\n{thread_text}"
             
             response = client.models.generate_content(
-                model='gemini-1.5-flash',
+                model='gemini-2.0-flash',
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
@@ -99,7 +99,7 @@ class GeminiService:
         try:
             # Generate embedding using the standard embedding model
             response = client.models.embed_content(
-                model='text-embedding-004',
+                model='gemini-embedding-2',
                 contents=text
             )
             # Response contains a list of embeddings (usually 768 dimensions)
