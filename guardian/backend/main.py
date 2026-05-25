@@ -36,7 +36,7 @@ app.add_middleware(
 app.include_router(moderation_router)
 app.include_router(analytics_router)
 
-@app.get("/")
+@app.get("/") ## Health check endpoint
 async def root():
     return {
         "status": "online",
