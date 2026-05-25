@@ -23,6 +23,10 @@
       ]
     }
   },
+  "triggers": {
+    "onPostSubmit": "/internal/on-post-submit",
+    "onCommentSubmit": "/internal/on-comment-submit"
+  },
   "dev": {
     "subreddit": "guardian_app_dev"
   }

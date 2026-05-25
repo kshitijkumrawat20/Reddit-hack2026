@@ -44,7 +44,7 @@ Devvit.addSettings([
 // Triggered when a new post is submitted in the subreddit
 Devvit.addTrigger({
   event: 'PostSubmit',
-  async onEvent(event, context) {
+  async handler(event, context) {
     const post = event.post;
     if (!post) return;
 
@@ -68,7 +68,7 @@ Devvit.addTrigger({
 // Triggered when a new comment is submitted in the subreddit
 Devvit.addTrigger({
   event: 'CommentSubmit',
-  async onEvent(event, context) {
+  async handler(event, context) {
     const comment = event.comment;
     if (!comment) return;
 
