@@ -10,7 +10,9 @@
       "domains": [
         "guardian-copilot.localthroat.link",
         "guardian-copilot.localtunnel.me",
-        "guardian-copilot.loca.lt"
+        "guardian-copilot.loca.lt",
+        "guardian-copilot-dev.loca.lt",
+        "guardian-copilot-test.loca.lt"
       ]
     }
   },
