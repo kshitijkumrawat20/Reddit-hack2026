@@ -1,8 +1,6 @@
 // API Client wrapper for communicating with the Guardian FastAPI backend.
 // In Devvit, fetch is available globally, but domains must be allow-listed in devvit.json.
 
-const BACKEND_URL = 'http://localhost:8000';
-
 export type ContentSubmission = {
   id: string;
   type: 'post' | 'comment';
@@ -49,9 +47,15 @@ export type SubredditAnalytics = {
   [key: string]: any;
 };
 
-export async function checkContent(data: ContentSubmission): Promise<FlaggedQueueItem | null> {
+// Cleans URL to ensure it has no trailing slash
+function cleanUrl(url: string): string {
+  return url.endsWith('/') ? url.slice(0, -1) : url;
+}
+
+export async function checkContent(baseUrl: string, data: ContentSubmission): Promise<FlaggedQueueItem | null> {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/moderation/check`, {
+    const url = `${cleanUrl(baseUrl)}/api/moderation/check`;
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -71,9 +75,10 @@ export async function checkContent(data: ContentSubmission): Promise<FlaggedQueu
   }
 }
 
-export async function getQueue(subreddit: string): Promise<FlaggedQueueItem[]> {
+export async function getQueue(baseUrl: string, subreddit: string): Promise<FlaggedQueueItem[]> {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/moderation/queue?subreddit=${subreddit}`, {
+    const url = `${cleanUrl(baseUrl)}/api/moderation/queue?subreddit=${subreddit}`;
+    const response = await fetch(url, {
       method: 'GET',
     });
 
@@ -90,12 +95,14 @@ export async function getQueue(subreddit: string): Promise<FlaggedQueueItem[]> {
 }
 
 export async function resolveItem(
+  baseUrl: string,
   id: string,
   action: 'approve' | 'remove' | 'ignore' | 'warn',
   moderator: string
 ): Promise<boolean> {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/moderation/resolve`, {
+    const url = `${cleanUrl(baseUrl)}/api/moderation/resolve`;
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -111,12 +118,14 @@ export async function resolveItem(
 }
 
 export async function submitFeedback(
+  baseUrl: string,
   id: string,
   isCorrect: boolean,
   reason?: string
 ): Promise<boolean> {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/moderation/feedback`, {
+    const url = `${cleanUrl(baseUrl)}/api/moderation/feedback`;
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -131,9 +140,10 @@ export async function submitFeedback(
   }
 }
 
-export async function getAnalytics(subreddit: string): Promise<SubredditAnalytics | null> {
+export async function getAnalytics(baseUrl: string, subreddit: string): Promise<SubredditAnalytics | null> {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/analytics/subreddit?subreddit=${subreddit}`, {
+    const url = `${cleanUrl(baseUrl)}/api/analytics/subreddit?subreddit=${subreddit}`;
+    const response = await fetch(url, {
       method: 'GET',
     });
 

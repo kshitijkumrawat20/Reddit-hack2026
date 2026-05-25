@@ -1,4 +1,4 @@
-import { Devvit, useAsync } from '@devvit/public-api';
+import { Devvit, useAsync, SettingScope } from '@devvit/public-api';
 import { 
   checkContent, 
   getQueue, 
@@ -9,11 +9,26 @@ import {
   type SubredditAnalytics
 } from './api/backend.js';
 
+const DEFAULT_BACKEND_URL = 'https://guardian-copilot.loca.lt';
+
 // Configure Devvit plugins
 Devvit.configure({
   redditAPI: true,
   http: true,
 });
+
+// --- SETTINGS ---
+
+Devvit.addSettings([
+  {
+    type: 'string',
+    name: 'backend-url',
+    label: '🛡️ Guardian Backend URL',
+    helpText: 'Exposed tunnel URL of the FastAPI backend (e.g. https://guardian-copilot.loca.lt)',
+    defaultValue: DEFAULT_BACKEND_URL,
+    scope: SettingScope.Installation,
+  }
+]);
 
 // --- TRIGGERS ---
 
@@ -26,7 +41,8 @@ Devvit.addTrigger({
 
     console.log(`[Guardian] Processing new post submit: ${post.id}`);
     try {
-      await checkContent({
+      const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+      await checkContent(baseUrl, {
         id: post.id,
         type: 'post',
         subreddit: event.subreddit?.name || '',
@@ -56,7 +72,8 @@ Devvit.addTrigger({
 
     console.log(`[Guardian] Processing new comment submit: ${comment.id}`);
     try {
-      await checkContent({
+      const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+      await checkContent(baseUrl, {
         id: comment.id,
         type: 'comment',
         subreddit: event.subreddit?.name || '',
@@ -134,7 +151,8 @@ Devvit.addCustomPostType({
     // 3. Fetch flagged items queue
     const { data: queueData, loading: loadingQueue } = useAsync(async () => {
       try {
-        return await getQueue(context.subredditName!);
+        const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+        return await getQueue(baseUrl, context.subredditName!);
       } catch (error) {
         console.error('[Guardian] Error fetching queue:', error);
         return [];
@@ -144,7 +162,8 @@ Devvit.addCustomPostType({
     // 4. Fetch insights analytics
     const { data: analyticsData, loading: loadingAnalytics } = useAsync(async () => {
       try {
-        return await getAnalytics(context.subredditName!);
+        const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+        return await getAnalytics(baseUrl, context.subredditName!);
       } catch (error) {
         console.error('[Guardian] Error fetching analytics:', error);
         return null;
@@ -175,8 +194,11 @@ Devvit.addCustomPostType({
           await context.reddit.remove(itemId, false);
         }
         
+        // Get dynamic backend URL
+        const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+
         // Sync resolution to FastAPI backend
-        const success = await resolveItem(itemId, action, modUsername || 'moderator');
+        const success = await resolveItem(baseUrl, itemId, action, modUsername || 'moderator');
         if (success) {
           context.ui.showToast(`Item resolved: ${action}d`);
           // Re-fetch dashboard states
@@ -193,7 +215,8 @@ Devvit.addCustomPostType({
 
     const handleFeedback = async (itemId: string, isCorrect: boolean) => {
       try {
-        const success = await submitFeedback(itemId, isCorrect);
+        const baseUrl = await context.settings.get<string>('backend-url') || DEFAULT_BACKEND_URL;
+        const success = await submitFeedback(baseUrl, itemId, isCorrect);
         if (success) {
           context.ui.showToast(isCorrect ? 'Thanks for confirming!' : 'Reported false positive.');
           triggerRefresh();

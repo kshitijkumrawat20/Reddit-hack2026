@@ -1,6 +1,6 @@
 {
   "name": "guardian-app",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "devvit playtest",
@@ -14,5 +14,7 @@
   "devDependencies": {
     "devvit": "0.12.24",
     "typescript": "^5.0.0"
-  }
+  },
+  "private": true,
+  "license": "BSD-3-Clause"
 }

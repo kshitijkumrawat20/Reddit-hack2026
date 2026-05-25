@@ -8,8 +8,13 @@
     "reddit": true,
     "http": {
       "domains": [
-        "localhost:8000"
+        "guardian-copilot.localthroat.link",
+        "guardian-copilot.localtunnel.me",
+        "guardian-copilot.loca.lt"
       ]
     }
+  },
+  "dev": {
+    "subreddit": "guardian_app_dev"
   }
 }
